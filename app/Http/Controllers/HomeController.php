@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Status;
 use App\Models\Url;
+use App\Enums\Status;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlResquest;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -40,21 +41,22 @@ class HomeController extends Controller
         return view('app.edit', compact('url'));
     }
 
-    public function update(UrlResquest $request, Url $url){
+    public function update(UrlResquest $request, Url $url)
+    {
         $validated = $request->validated();
-
-        try{
-            $url = new Url();
+    
+        try {
             $url->original_url = $validated['original_url'];
-            $url->shorten_url = $validated['shorten_url'];
-            $url->update();     
-
-        return redirect()->route('index')
-            ->withSuccess('Operation Successful');
-
-        }catch(\Throwable $th) {
-            return redirect()->route('index')
-            ->with('something went wrong');
+            $url->status = Status::Active;
+    
+            // Save the changes to the database
+            $url->save();
+    
+            return redirect()->route('index')->withSuccess('Operation Successful');
+        } catch (\Throwable $th) {
+            Log::error($th);
+    
+            return redirect()->route('index')->with('error', 'Something went wrong. Please try again.');
         }
     }
 }
