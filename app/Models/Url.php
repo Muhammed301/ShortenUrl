@@ -13,4 +13,6 @@ class Url extends Model
         "original_url",
         "shorten_url"
     ];
+
+    
 }
