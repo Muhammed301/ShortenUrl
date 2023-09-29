@@ -15,6 +15,8 @@ class CreateUrl extends Controller
         $urls = Url::all();
         return $urls;
     }
+
+    
     public function save($validated){
         $validated['shorten_url'] =ENV('APP_URL').'/'. base_convert($validated['original_url'],16,8);
         $url = new Url();

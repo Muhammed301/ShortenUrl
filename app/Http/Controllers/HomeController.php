@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Log;
 class HomeController extends Controller
 {
     // Get all Url
-    public function index(CreateUrl $get_urls){
-        $urls = $get_urls->get_all();
+    public function index(){
+        $urls = new CreateUrl;
+        $urls = $urls->get_all();
 
         $status = Status::toSelectArray();
 
@@ -21,10 +22,10 @@ class HomeController extends Controller
     }
 
     // Save Url
-    public function store(UrlResquest $request, CreateUrl $createUrl){
+    public function store(UrlResquest $request){
         $validated = $request->validated();
         try{
-            
+            $createUrl = new CreateUrl;
             $createUrl->save($validated);
                  
 
