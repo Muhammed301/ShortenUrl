@@ -4,29 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Url;
 use App\Enums\Status;
+use App\Http\Controllers\Actions\CreateUrl;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlResquest;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
-    //
-    public function index(){
-        $urls = Url::all();
+    // Get all Url
+    public function index(CreateUrl $get_urls){
+        $urls = $get_urls->get_all();
 
-        return view('app.index', compact('urls'));
+        $status = Status::toSelectArray();
+
+        return view('app.index', compact('urls' ,'status'));
     }
 
-    public function store(UrlResquest $request){
+    // Save Url
+    public function store(UrlResquest $request, CreateUrl $createUrl){
         $validated = $request->validated();
         try{
-            $validated['shorten_url'] =ENV('APP_URL').'/'. base_convert($validated['original_url'],16,8);
-
-            $url = new Url();
-            $url->original_url = $validated['original_url'];
-            $url->shorten_url = $validated['shorten_url'];
-            $url->status = Status::Active;
-            $url->save();     
+            
+            $createUrl->save($validated);
+                 
 
             return redirect()->route('index')
             ->withSuccess('Operation Successful');
@@ -36,23 +36,24 @@ class HomeController extends Controller
         }
     }
 
-    public function edit(Url $url){
 
-        return view('app.edit', compact('url'));
+    ///Edit Url view
+    public function edit(Url $url){
+        $status = Status::toSelectArray();
+        return view('app.edit', compact('url','status'));
     }
 
-    public function update(UrlResquest $request, Url $url)
+
+    /// Update URl
+    public function update(UrlResquest $request, CreateUrl $createUrl,Url $url)
     {
         $validated = $request->validated();
     
         try {
-            $url->original_url = $validated['original_url'];
-            $url->status = Status::Active;
-    
             // Save the changes to the database
-            $url->save();
+            $createUrl->update($url,$validated);
     
-            return redirect()->route('index')->withSuccess('Operation Successful');
+            return redirect()->route('index')->withInput()->withSuccess('Operation Successful');
         } catch (\Throwable $th) {
             Log::error($th);
     

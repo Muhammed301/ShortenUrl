@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Status;
+use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UrlResquest extends FormRequest
@@ -24,6 +26,8 @@ class UrlResquest extends FormRequest
         return [
             //
             'original_url' => ['required', 'max:255', 'string'],
+            // 'status' => ['nullable', 'string', Status::class, 'default:'. Status::Active],
+            'status' => ['nullable','string',new EnumValue(Status::class)],
             
         ];
     }
