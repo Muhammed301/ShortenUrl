@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Actions;
 
 use App\Models\Url;
 use App\Enums\Status;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class CreateUrl extends Controller
+class CreateUrl 
 {
     //
 
