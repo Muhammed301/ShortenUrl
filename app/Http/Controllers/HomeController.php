@@ -46,11 +46,12 @@ class HomeController extends Controller
 
 
     /// Update URl
-    public function update(UrlResquest $request, CreateUrl $createUrl,Url $url)
+    public function update(UrlResquest $request ,Url $url)
     {
         $validated = $request->validated();
     
         try {
+            $createUrl = new CreateUrl;
             // Save the changes to the database
             $createUrl->update($url,$validated);
     
