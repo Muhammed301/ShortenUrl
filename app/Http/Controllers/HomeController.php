@@ -3,48 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Url;
-use App\Enums\Status;
-use App\Actions\SaveUrl;
-use Illuminate\Http\Request;
+use App\Actions\SaveUrlAction;
+use App\DataObjectTransfer\UrlData;
+use App\Enums\StatusType;
 use App\Http\Requests\UrlResquest;
-use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
     // Get all Url
-    protected $saveUrl;
 
-    public function __construct(SaveUrl $saveUrl) {
-        $this->saveUrl = $saveUrl;
+    public function __construct( 
+        public SaveUrlAction $saveUrl,
+    ) {
     }
     public function index(){
         $urls = Url::all();
 
-        $status = Status::toSelectArray();
+        $status = StatusType::toArray();
 
         return view('app.index', compact('urls' ,'status'));
     }
 
     // Save Url
     public function store(UrlResquest $request){
-        $validated = $request->validated();
-        try{
-            // $createUrl = new CreateUrl;
-            $this->saveUrl->execute($validated,new Url());
-                 
+        
+        $this->upSet($request, new Url());
+        return redirect()->route('index')
+        ->withSuccess('Operation Successful');
 
-            return redirect()->route('index')
-            ->withSuccess('Operation Successful');
-        }catch(\Throwable $th) {
-            return redirect()->route('index')
-            ->with('something went wrong');
-        }
     }
 
 
     ///Edit Url view
     public function edit(Url $url){
-        $status = Status::toSelectArray();
+        $status = StatusType::toArray();
         return view('app.edit', compact('url','status'));
     }
 
@@ -52,17 +44,12 @@ class HomeController extends Controller
     /// Update URl
     public function update(UrlResquest $request ,Url $url)
     {
-        $validated = $request->validated();
-    
-        try {
-            // Save the changes to the database
-            $this->saveUrl->execute($validated,$url);
-    
-            return redirect()->route('index')->withInput()->withSuccess('Operation Successful');
-        } catch (\Throwable $th) {
-            Log::error($th);
-    
-            return redirect()->route('index')->with('error', 'Something went wrong. Please try again.');
-        }
+        $data = $this->upSet($request, $url);
+        return redirect()->route('index')->withSuccess('Operation Successful');
+    }
+
+    public function upSet(UrlResquest $request, Url $url){
+        $urlData = UrlData::FormRequest($request);
+        $this->saveUrl->execute($urlData,$url);
     }
 }

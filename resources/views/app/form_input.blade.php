@@ -18,10 +18,10 @@
             label="Status"
             
         >
-            @php $selected = old('status', ($editing ? $url->statusd : '')) @endphp
+            @php $selected = old('status', ($editing ? $url->status : '')) @endphp
             <option disabled {{ empty($selected) ? 'selected' : '' }}>Please select the Status</option>
             @foreach($status as $value => $label)
-            <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }} >{{ $label }}</option>
+            <option value="{{ $label }}" {{ $selected == $label ? 'selected' : '' }} >{{ $label }}</option>
             @endforeach
         </x-inputs.select>
     </x-inputs.group>

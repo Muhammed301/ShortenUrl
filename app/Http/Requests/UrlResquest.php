@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Status;
-use BenSampo\Enum\Rules\EnumValue;
+use App\Enums\StatusType;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UrlResquest extends FormRequest
@@ -23,11 +24,11 @@ class UrlResquest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             //
             'original_url' => ['required', 'max:255', 'string'],
-            // 'status' => ['nullable', 'string', Status::class, 'default:'. Status::Active],
-            'status' => ['nullable','string',new EnumValue(Status::class)],
+            'status' => ['nullable','string',Rule::in(StatusType::toArray())],
             
         ];
     }
