@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Url;
 use App\Enums\Status;
-use App\Http\Controllers\Actions\CreateUrl;
+use App\Http\Controllers\Actions\SaveUrl;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlResquest;
 use Illuminate\Support\Facades\Log;
@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Log;
 class HomeController extends Controller
 {
     // Get all Url
-    protected $createUrl;
+    protected $saveUrl;
 
-    public function __construct(CreateUrl $createUrl) {
-        $this->createUrl = $createUrl;
+    public function __construct(SaveUrl $saveUrl) {
+        $this->saveUrl = $saveUrl;
     }
     public function index(){
-        $urls = $this->createUrl->get_all();
+        $urls = Url::all();
 
         $status = Status::toSelectArray();
 
@@ -30,7 +30,7 @@ class HomeController extends Controller
         $validated = $request->validated();
         try{
             // $createUrl = new CreateUrl;
-            $this->createUrl->save($validated);
+            $this->saveUrl->execute($validated,new Url());
                  
 
             return redirect()->route('index')
@@ -56,7 +56,7 @@ class HomeController extends Controller
     
         try {
             // Save the changes to the database
-            $this->createUrl->update($url,$validated);
+            $this->saveUrl->execute($validated,$url);
     
             return redirect()->route('index')->withInput()->withSuccess('Operation Successful');
         } catch (\Throwable $th) {
