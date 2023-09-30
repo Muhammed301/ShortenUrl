@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Log;
 class HomeController extends Controller
 {
     // Get all Url
+    protected $createUrl;
+
+    public function __construct(CreateUrl $createUrl) {
+        $this->createUrl = $createUrl;
+    }
     public function index(){
-        $urls = new CreateUrl;
-        $urls = $urls->get_all();
+        $urls = $this->createUrl->get_all();
 
         $status = Status::toSelectArray();
 
@@ -25,8 +29,8 @@ class HomeController extends Controller
     public function store(UrlResquest $request){
         $validated = $request->validated();
         try{
-            $createUrl = new CreateUrl;
-            $createUrl->save($validated);
+            // $createUrl = new CreateUrl;
+            $this->createUrl->save($validated);
                  
 
             return redirect()->route('index')
@@ -51,9 +55,8 @@ class HomeController extends Controller
         $validated = $request->validated();
     
         try {
-            $createUrl = new CreateUrl;
             // Save the changes to the database
-            $createUrl->update($url,$validated);
+            $this->createUrl->update($url,$validated);
     
             return redirect()->route('index')->withInput()->withSuccess('Operation Successful');
         } catch (\Throwable $th) {
