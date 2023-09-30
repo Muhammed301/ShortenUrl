@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Url;
 use App\Enums\Status;
-use App\Http\Controllers\Actions\SaveUrl;
+use App\Actions\SaveUrl;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlResquest;
 use Illuminate\Support\Facades\Log;
