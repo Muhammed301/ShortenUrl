@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,14 @@ Route::middleware('auth')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     });
+
+    Route::middleware('auth')->name('payment.')->group(function () {
+        Route::get('/pay', [PaymentController::class, 'index'])->name('index');
+        Route::post('/pay/initiate-payment', [PaymentController::class, 'initiate'])->name('initiate');
+        Route::get('/pay/payment-callback', [PaymentController::class, 'payment_callback'])->name('callback');
+
+    });
+    
 
 });
 

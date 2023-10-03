@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Url;
-use App\Actions\SaveUrlAction;
-use App\DataObjectTransfer\UrlData;
 use App\Enums\StatusType;
+use App\Actions\SaveUrlAction;
+use App\Actions\SaveUserAction;
 use App\Http\Requests\UrlResquest;
+use App\DataObjectTransfer\UrlData;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -14,6 +16,7 @@ class HomeController extends Controller
 
     public function __construct( 
         public SaveUrlAction $saveUrl,
+        public SaveUserAction  $saveUserAction
     ) {
     }
     public function index(){
@@ -26,8 +29,20 @@ class HomeController extends Controller
 
     // Save Url
     public function store(UrlResquest $request){
-        
+        $user = Auth::user();
+        $data= [];
+        if($user->url_count < 5){
+            $data['url_count']=$user->url_count + 1 ;
+        }elseif($user->wallet_balance >= 100){
+            $data['url_count']=$user->url_count + 1 ;
+            $data['wallet_balance']=$user->wallet_balance - 100 ;
+        }else{
+            return back()->withError('Kindly Fund Your Wallet');
+        }
         $this->upSet($request, new Url());
+        
+        $this->saveUserAction->execute($user,$data);
+        
         return redirect()->route('index')
         ->withSuccess('Operation Successful');
 
@@ -50,6 +65,8 @@ class HomeController extends Controller
 
     public function upSet(UrlResquest $request, Url $url){
         $urlData = UrlData::FormRequest($request);
+
+       $user= Auth::user();
         $this->saveUrl->execute($urlData,$url);
     }
 }

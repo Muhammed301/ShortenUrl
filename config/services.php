@@ -31,4 +31,17 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'paystack' => [
+        'url' => env('PAYSTACK_BASE_URL'),
+        'secret' =>  env('PAYSTACK_SECRET_KEY'),
+        'key' =>env('PAYSTACK_PUBLIC_KEY'),
+    ],
+    'flutterwave' => [
+        'url' => env('FLUTTERWAVE_BASE_URL'),
+        'secret' =>  env('FLUTTERWAVE_SECRET_KEY'),
+        'key' =>env('FLUTTERWAVE_PUBLIC_KEY'),
+        'encryption-key'=>env("FLUTTERWAVE_ENCRYPTION_KEY")
+    ],
+
+
 ];
