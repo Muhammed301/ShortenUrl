@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Actions\PaymentAction;
@@ -14,7 +13,6 @@ use App\Http\Requests\PaymentRequest;
 use App\Actions\SaveTransactionAction;
 use App\Actions\SaveUserAction;
 use App\DataObjectTransfer\PaymentData;
-use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class PaymentController extends Controller
 {

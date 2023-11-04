@@ -31,7 +31,7 @@ class HomeController extends Controller
     public function store(UrlResquest $request){
         $user = Auth::user();
         $data= [];
-        if($user->url_count < 5){
+        if($user->url_count <= 5){
             $data['url_count']=$user->url_count + 1 ;
         }elseif($user->wallet_balance >= 100){
             $data['url_count']=$user->url_count + 1 ;
@@ -45,6 +45,7 @@ class HomeController extends Controller
         
         return redirect()->route('index')
         ->withSuccess('Operation Successful');
+        //test
 
     }
 
