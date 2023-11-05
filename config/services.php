@@ -42,6 +42,11 @@ return [
         'key' =>env('FLUTTERWAVE_PUBLIC_KEY'),
         'encryption-key'=>env("FLUTTERWAVE_ENCRYPTION_KEY")
     ],
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => 'http://127.0.0.1:8000/auth/callback',
+    ],
 
 
 ];
